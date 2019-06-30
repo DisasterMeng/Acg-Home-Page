@@ -6,25 +6,38 @@
 
 
 <script lang="ts">
-import { Vue, Provide } from 'vue-property-decorator'
+import { Vue, Provide,Component } from 'vue-property-decorator'
+import { fetchIsWallApi } from "../api"
 
+@Component
 export default class Search extends Vue {
 
 	@Provide() private content: string = ''
-	private isWall: boolean = true
+
+	isWall: boolean = true;
 
 	private enterKeyHander() {
-		console.log(this.content)
+	
 
 	}
 
 	private checkWall() {
-        
+		console.log(333)
+		fetchIsWallApi()
+			.then(() => {
+				console.log(1111);
+			})
+			.catch(() => {
+				console.log(22222);
+			});
 	}
+
 
 	created() {
-
+		console.log(444)
+		this.checkWall()
 	}
+
 
 }
 </script>

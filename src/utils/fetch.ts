@@ -10,48 +10,51 @@ import qs from 'query-string'
 const isFormData = (v: any) => Object.prototype.toString.call(v) === '[object FormData]'
 
 
-interface Fetch {
+
+const createServiceInstance = () => {
+    const instance = axios.create({
+        baseURL: '',
+        responseType: 'json',
+        transformRequest: [
+            (data) => {
+                if (isFormData(data)) {
+                    return data
+                }
+                return qs.stringify(data)
+            }
+        ],
+        withCredentials: true
+    })
+
+    // 请求拦截器
+    instance.interceptors.request.use(
+        (config) => {
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+            return config
+        },
+        (err) => Promise.reject(err)
+    )
+
+    // 返回拦截器 
+    instance.interceptors.response.use(
+        (response) => Promise.resolve(response),
+        (err) => Promise.reject(err)
+    )
+    return instance
+}
+
+
+interface BaseFetch {
     get<T = any, R = AxiosResponse<T>>(url: string, params?: object): Promise<R>
 }
 
-class FetchUtil implements Fetch {
-  
-    private instance: AxiosInstance
+export default class FetchUtil{
 
-    constructor() {
-        this.instance = axios.create({
-            baseURL: '',
-            responseType: 'json',
-            transformRequest: [
-                (data) => {
-                    if (isFormData(data)) {
-                        return data
-                    }
-                    return qs.stringify(data)
-                }
-            ],
-            withCredentials: true
-        })
+    public static instance: AxiosInstance = createServiceInstance()
 
-        // 请求拦截器
-        this.instance.interceptors.request.use(
-            (config) => {
-                config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-                return config
-            },
-            (err) => Promise.reject(err)
-        )
 
-        // 返回拦截器 
-        this.instance.interceptors.response.use(
-            (response) => Promise.resolve(response),
-            (err) => Promise.reject(err)
-        )
-
-    }
-
-    public get<T = any, R = AxiosResponse<T>>(url: string, params?: object | undefined): Promise<R> {
-        this.instance.get(url,{params:params})
+    public static get<T = any, R = AxiosResponse<T>>(url: string, params?: object | undefined): Promise<R> {
+        return this.instance.get(url, { params })
     }
 
 }
