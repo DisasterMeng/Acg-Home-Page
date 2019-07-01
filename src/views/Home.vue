@@ -1,22 +1,35 @@
 <template lang='pug'>
-    div.home-container
-        Search
+	div.home-container
+		search
+		div.acg-group-container
+			div(v-for="acg in acgs", :key="acg.link")
+				acg-item(:acg='acg')
+			
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
 import Search from '../components/Search.vue'
+import AcgItem, { AcgItemBean } from '../components/AcgItem.vue'
+
+
 
 @Component({
 	components: {
-		Search
+		Search,
+		AcgItem
 	}
 })
 export default class Home extends Vue {
-	private created() {
 
-	}
+	private acgs: AcgItemBean[] = [
+		{
+			title: 'title',
+			link: 'linek',
+			src: 'src'
+		}
+	]
 }
 </script>
 
