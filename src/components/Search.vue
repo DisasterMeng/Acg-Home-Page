@@ -6,35 +6,43 @@
 
 
 <script lang="ts">
-import { Vue, Provide,Component } from 'vue-property-decorator'
-import { fetchIsWallApi } from "../api"
+import { Vue, Provide, Component } from 'vue-property-decorator'
+import { fetchIsWallApi } from '../api'
 
 @Component
 export default class Search extends Vue {
 
 	@Provide() private content: string = ''
 
-	isWall: boolean = true;
+	private isWall: boolean = true
 
 	private enterKeyHander() {
-	
 
+		const content = this.content
+
+		if (content.length === 0) {
+			return
+		}
+
+		if (this.isWall) {
+			window.location.href = `https://wwww.baidu.com/s?wd=${content}`
+		} else {
+			window.location.href = `https://wwww.google.com/search?q=${content}`
+		}
 	}
 
 	private checkWall() {
-		console.log(333)
 		fetchIsWallApi()
 			.then(() => {
-				console.log(1111);
+				this.isWall = false
 			})
 			.catch(() => {
-				console.log(22222);
-			});
+				this.isWall = true
+			})
 	}
 
 
-	created() {
-		console.log(444)
+	private created() {
 		this.checkWall()
 	}
 

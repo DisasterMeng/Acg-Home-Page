@@ -4,7 +4,6 @@ import qs from 'query-string'
 
 /**
  * 判断是否是formdata类型
- * 
  * @param {*} v 值
  */
 const isFormData = (v: any) => Object.prototype.toString.call(v) === '[object FormData]'
@@ -23,10 +22,11 @@ const createServiceInstance = () => {
                 return qs.stringify(data)
             }
         ],
-        withCredentials: true
+        withCredentials: true,
+        timeout: 5*1000,
     })
 
-    // 请求拦截器
+
     instance.interceptors.request.use(
         (config) => {
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -35,7 +35,7 @@ const createServiceInstance = () => {
         (err) => Promise.reject(err)
     )
 
-    // 返回拦截器 
+
     instance.interceptors.response.use(
         (response) => Promise.resolve(response),
         (err) => Promise.reject(err)
@@ -48,7 +48,7 @@ interface BaseFetch {
     get<T = any, R = AxiosResponse<T>>(url: string, params?: object): Promise<R>
 }
 
-export default class FetchUtil{
+export default class FetchUtil {
 
     public static instance: AxiosInstance = createServiceInstance()
 

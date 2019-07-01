@@ -13,16 +13,16 @@ import Search from '../components/Search.vue'
 		Search
 	}
 })
-export default class Home extends Vue { 
+export default class Home extends Vue {
+	private created() {
 
-
-
+	}
 }
 </script>
 
 <style lang="stylus" scoped>
 .home-container
-	height 100% 
+	height 100%
 	width 100%
 	display flex
 	justify-content center
